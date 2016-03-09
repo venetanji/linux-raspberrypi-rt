@@ -10,7 +10,7 @@ pkgbase=linux-raspberrypi-rt
 _commit=48f3f7707a43b019e14216cec7376eba21972f9b
 _srcname=linux-${_commit}
 _kernelname=${pkgbase#linux}
-_desc="Raspberry Pi"
+_desc="Raspberry Pi linux with rt patch"
 pkgver=4.4.4
 pkgrel=1
 bfqver=v7r11
@@ -20,21 +20,15 @@ license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git')
 options=('!strip')
 source=("https://github.com/raspberrypi/linux/archive/${_commit}.tar.gz"
-	"https://www.kernel.org/pub/linux/kernel/projects/rt/4.4/patch-4.4.3-rt9.patch.gz"
-        "git+https://github.com/sfjro/aufs4-standalone.git#branch=aufs${pkgver%.*}"
-        "ftp://teambelgium.net/bfq/patches/${pkgver%.*}.0-${bfqver}/0001-block-cgroups-kconfig-build-bits-for-BFQ-${bfqver}-${pkgver%.*}.0.patch"
-        "ftp://teambelgium.net/bfq/patches/${pkgver%.*}.0-${bfqver}/0002-block-introduce-the-BFQ-${bfqver}-I-O-sched-for-${pkgver%.*}.0.patch"
-        "ftp://teambelgium.net/bfq/patches/${pkgver%.*}.0-${bfqver}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-${bfqver}-for.patch"
-        'https://archlinuxarm.org/builder/src/brcmfmac43430-sdio.bin' 'https://archlinuxarm.org/builder/src/brcmfmac43430-sdio.txt'
+	      "https://www.kernel.org/pub/linux/kernel/projects/rt/4.4/patch-4.4.3-rt9.patch.gz"
+        'https://archlinuxarm.org/builder/src/brcmfmac43430-sdio.bin'
+        'https://archlinuxarm.org/builder/src/brcmfmac43430-sdio.txt'
         'config.txt'
         'cmdline.txt'
         'config.v6'
         'config.v7')
 md5sums=('2d2b7112bb41b51bfd813e0f35deb3ec'
          'SKIP'
-         '74bf103542cbdee0363819309adb97a2'
-         'f09baae3c7add4ed9bedde22ae3efe19'
-         'bd8cc19a31d1cf8aeeaf9245057c4f9b'
          '4a410ab9a1eefe82e158d36df02b3589'
          '8c3cb6d8f0609b43f09d083b4006ec5a'
          '9a3c82da627b317ec79c37fd6afba569'
@@ -45,24 +39,8 @@ md5sums=('2d2b7112bb41b51bfd813e0f35deb3ec'
 prepare() {
   cd "${srcdir}/${_srcname}"
   
-  patch -Np1 patch-4.4.3-rt9.patch
+  patch -Np1 -i ../patch-4.4.3-rt9.patch
  
-  msg2 "AUFS patches"
-  cp -ru "${srcdir}/aufs4-standalone/Documentation" .
-  cp -ru "${srcdir}/aufs4-standalone/fs" .
-  cp -ru "${srcdir}/aufs4-standalone/include/uapi/linux/aufs_type.h" ./include/linux
-  cp -ru "${srcdir}/aufs4-standalone/include/uapi/linux/aufs_type.h" ./include/uapi/linux
-
-  patch -Np1 -i ../aufs4-standalone/aufs4-kbuild.patch
-  patch -Np1 -i ../aufs4-standalone/aufs4-base.patch
-  patch -Np1 -i ../aufs4-standalone/aufs4-mmap.patch
-  patch -Np1 -i ../aufs4-standalone/aufs4-standalone.patch
-
-  msg2 "Add BFQ patches"
-  patch -Np1 -i "${srcdir}/0001-block-cgroups-kconfig-build-bits-for-BFQ-${bfqver}-${pkgver%.*}.patch"
-  patch -Np1 -i "${srcdir}/0002-block-introduce-the-BFQ-${bfqver}-I-O-sched-for-${pkgver%.*}.patch"
-  patch -Np1 -i "${srcdir}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-${bfqver}-for-${pkgver%.*}.0.patch"
-
   msg "Prepare to build"
   [[ $CARCH == "armv6h" ]] && cat "${srcdir}/config.v6" > ./.config
   [[ $CARCH == "armv7h" ]] && cat "${srcdir}/config.v7" > ./.config
