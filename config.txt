@@ -126,4 +126,5 @@
 #sdram_freq=500
 #over_voltage=6
 
+dtparam=audio=on
 gpu_mem=64
