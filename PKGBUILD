@@ -1,8 +1,5 @@
-# Maintainer: Dave Higham <pepedog@archlinuxarm.org>
-# Maintainer: Kevin Mihelich <kevin@archlinuxarm.org>
-# Maintainer: Oleg Rakhmanov <oleg@archlinuxarm.org>
+# Maintainer: Giovanni Lion <giovanni.lion@gmail.com>
 
-# NOTE: Packages replace linux-raspberrypi-latest, remove if that package comes back
 
 buildarch=20
 
@@ -27,14 +24,14 @@ source=("https://github.com/raspberrypi/linux/archive/${_commit}.tar.gz"
         'cmdline.txt'
         'config.v6'
         'config.v7')
-md5sums=('2d2b7112bb41b51bfd813e0f35deb3ec'
-         'SKIP'
+md5sums=('8a0ee943dcbe41949cc72e7b1bb2b155'
+         'c221b8994df16106bf149b16ebf961eb'
          '4a410ab9a1eefe82e158d36df02b3589'
          '8c3cb6d8f0609b43f09d083b4006ec5a'
-         '9a3c82da627b317ec79c37fd6afba569'
+         'b907c61cd94ee485f6ec64273a1b316e'
          '60bc3624123c183305677097bcd56212'
          'cda3f853ce35cda97c8e0a322c05b5a3'
-         '0e2c80abd8d9fb8099ff41d95f87806e')
+         '146a492f94c150b745ae4fdbf0de0c3e')
 
 prepare() {
   cd "${srcdir}/${_srcname}"
